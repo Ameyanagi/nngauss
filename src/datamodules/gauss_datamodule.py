@@ -7,7 +7,7 @@ from torchvision.datasets import MNIST
 from torchvision.transforms import transforms
 
 
-class MNISTDataModule(LightningDataModule):
+class gaussDataModule(LightningDataModule):
     """Example of LightningDataModule for MNIST dataset.
 
     A DataModule implements 5 key methods:
@@ -27,7 +27,7 @@ class MNISTDataModule(LightningDataModule):
     def __init__(
         self,
         data_dir: str = "data/",
-        train_val_test_split: Tuple[int, int, int] = (55_000, 5_000, 10_000),
+        train_val_test_split: Tuple[int, int, int] = (40000, 5000, 5000),
         batch_size: int = 64,
         num_workers: int = 0,
         pin_memory: bool = False,
@@ -38,17 +38,19 @@ class MNISTDataModule(LightningDataModule):
         self.save_hyperparameters(logger=False)
 
         # data transformations
-        self.transforms = transforms.Compose(
-            [transforms.ToTensor(), transforms.Normalize((0.1307,), (0.3081,))]
-        )
+        # self.transforms = transforms.Compose(
+        #     [transforms.ToTensor(), transforms.Normalize((0.1307,), (0.3081,))]
+        # )
+
+        self.train_transforms = None
 
         self.data_train: Optional[Dataset] = None
         self.data_val: Optional[Dataset] = None
         self.data_test: Optional[Dataset] = None
 
-    @property
-    def num_classes(self) -> int:
-        return 10
+    # @property
+    # def num_classes(self) -> int:
+    #     return 10
 
     def prepare_data(self):
         """Download data if needed.
@@ -56,8 +58,10 @@ class MNISTDataModule(LightningDataModule):
         This method is called only from a single GPU.
         Do not use it to assign state (self.x = y).
         """
-        MNIST(self.hparams.data_dir, train=True, download=True)
-        MNIST(self.hparams.data_dir, train=False, download=True)
+        # MNIST(self.hparams.data_dir, train=True, download=True)
+        # MNIST(self.hparams.data_dir, train=False, download=True)
+        
+        pass
 
     def setup(self, stage: Optional[str] = None):
         """Load data. Set variables: `self.data_train`, `self.data_val`, `self.data_test`.
@@ -69,9 +73,7 @@ class MNISTDataModule(LightningDataModule):
 
         # load datasets only if they're not loaded already
         if not self.data_train and not self.data_val and not self.data_test:
-            trainset = MNIST(self.hparams.data_dir, train=True, transform=self.transforms)
-            testset = MNIST(self.hparams.data_dir, train=False, transform=self.transforms)
-            dataset = ConcatDataset(datasets=[trainset, testset])
+            dataset = torch.load(self.hparams.data_dir + "/gauss/gauss.pt")
             self.data_train, self.data_val, self.data_test = random_split(
                 dataset=dataset,
                 lengths=self.hparams.train_val_test_split,
@@ -104,10 +106,4 @@ class MNISTDataModule(LightningDataModule):
             pin_memory=self.hparams.pin_memory,
             shuffle=False,
         )
-
-
-if __name__ == '__main__':
-    test = MNISTDataModule
-    test.setup()
-    print(test.data_train)
     

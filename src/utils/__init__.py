@@ -157,6 +157,8 @@ def finish(
 
     # without this sweeps with wandb logger might crash!
     for lg in logger:
+        print(lg)
+        print(isinstance(lg, pl.loggers.wandb.WandbLogger))
         if isinstance(lg, pl.loggers.wandb.WandbLogger):
             import wandb
 

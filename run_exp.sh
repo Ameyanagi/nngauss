@@ -1,0 +1,5 @@
+python train.py -m 'experiment=glob(gauss_03)'
+python train.py -m 'experiment=glob(gauss_04)'
+python train.py -m 'experiment=glob(gauss_05)'
+python train.py -m 'experiment=glob(gauss_06)'
+python train.py -m 'experiment=glob(gauss_07)'

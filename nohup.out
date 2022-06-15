@@ -1,0 +1,1118 @@
+/home/ryuichi/machine_learning/nngauss/train.py:10: UserWarning: 
+The version_base parameter is not specified.
+Please specify a compatability version level, or None.
+Will assume defaults for version 1.1
+  @hydra.main(config_path="configs/", config_name="train.yaml")
+[[36m2022-06-15 09:35:11,767[0m][[35mHYDRA[0m] Launching 1 jobs locally[0m
+[[36m2022-06-15 09:35:11,767[0m][[35mHYDRA[0m] 	#0 : experiment=gauss_03[0m
+/home/ryuichi/mambaforge/envs/lhtrain/lib/python3.9/site-packages/hydra/_internal/core_plugins/basic_launcher.py:74: UserWarning: Future Hydra versions will no longer change working directory at job runtime by default.
+See https://hydra.cc/docs/next/upgrades/1.1_to_1.2/changes_to_job_working_dir/ for more information.
+  ret = run_job(
+[[36m2022-06-15 09:35:15,047[0m][[34msrc.utils[0m][[32mINFO[0m] - Disabling python warnings! <config.ignore_warnings=True>[0m
+[[36m2022-06-15 09:35:15,048[0m][[34msrc.utils[0m][[32mINFO[0m] - Printing config tree with Rich! <config.print_config=True>[0m
+CONFIG
+├── datamodule
+│   └── _target_: src.datamodules.gauss_datamodule.gaussDataModule              
+│       data_dir: /home/ryuichi/machine_learning/nngauss/data/                  
+│       batch_size: 64                                                          
+│       train_val_test_split:                                                   
+│       - 40000                                                                 
+│       - 5000                                                                  
+│       - 5000                                                                  
+│       num_workers: 0                                                          
+│       pin_memory: false                                                       
+│                                                                               
+├── model
+│   └── _target_: src.models.gauss_module.gaussLitModule                        
+│       lr: 0.001                                                               
+│       weight_decay: 0.0005                                                    
+│       net:                                                                    
+│         _target_: src.models.components.gauss_net.SimpleDenseNet_ELU_gauss    
+│         input_size: 100                                                       
+│         lin1_size: 128                                                        
+│         lin2_size: 64                                                         
+│         lin3_size: 32                                                         
+│         output_size: 2                                                        
+│                                                                               
+├── callbacks
+│   └── model_checkpoint:                                                       
+│         _target_: pytorch_lightning.callbacks.ModelCheckpoint                 
+│         monitor: val/acc                                                      
+│         mode: max                                                             
+│         save_top_k: 1                                                         
+│         save_last: true                                                       
+│         verbose: false                                                        
+│         dirpath: checkpoints/                                                 
+│         filename: epoch_{epoch:03d}                                           
+│         auto_insert_metric_name: false                                        
+│       early_stopping:                                                         
+│         _target_: pytorch_lightning.callbacks.EarlyStopping                   
+│         monitor: val/acc                                                      
+│         mode: max                                                             
+│         patience: 100                                                         
+│         min_delta: 0                                                          
+│       model_summary:                                                          
+│         _target_: pytorch_lightning.callbacks.RichModelSummary                
+│         max_depth: -1                                                         
+│       rich_progress_bar:                                                      
+│         _target_: pytorch_lightning.callbacks.RichProgressBar                 
+│                                                                               
+├── logger
+│   └── wandb:                                                                  
+│         _target_: pytorch_lightning.loggers.wandb.WandbLogger                 
+│         project: nngauss                                                      
+│         name: Dense_3_Hidden_128_64_32_ELU                                    
+│         save_dir: /tmp                                                        
+│         offline: false                                                        
+│         id: null                                                              
+│         log_model: false                                                      
+│         prefix: ''                                                            
+│         job_type: train                                                       
+│         group: ''                                                             
+│         tags:                                                                 
+│         - gauss                                                               
+│         - Dense_3_Hidden_128_64_32_ELU                                        
+│                                                                               
+├── trainer
+│   └── _target_: pytorch_lightning.Trainer                                     
+│       gpus: 1                                                                 
+│       min_epochs: 1                                                           
+│       max_epochs: 100                                                         
+│       resume_from_checkpoint: null                                            
+│       gradient_clip_val: 0.5                                                  
+│                                                                               
+├── original_work_dir
+│   └── /home/ryuichi/machine_learning/nngauss                                  
+├── data_dir
+│   └── /home/ryuichi/machine_learning/nngauss/data/                            
+├── print_config
+│   └── True                                                                    
+├── ignore_warnings
+│   └── True                                                                    
+├── train
+│   └── True                                                                    
+├── test
+│   └── True                                                                    
+├── seed
+│   └── 0                                                                       
+└── name
+    └── Dense_3_Hidden_128_64_32_ELU                                            
+[[36m2022-06-15 09:35:15,087[0m][[34msrc.training_pipeline[0m][[32mINFO[0m] - Instantiating datamodule <src.datamodules.gauss_datamodule.gaussDataModule>[0m
+[[36m2022-06-15 09:35:15,103[0m][[34msrc.training_pipeline[0m][[32mINFO[0m] - Instantiating model <src.models.gauss_module.gaussLitModule>[0m
+[[36m2022-06-15 09:35:15,508[0m][[34mtorch.distributed.nn.jit.instantiator[0m][[32mINFO[0m] - Created a temporary directory at /tmp/tmpamza028f[0m
+[[36m2022-06-15 09:35:15,509[0m][[34mtorch.distributed.nn.jit.instantiator[0m][[32mINFO[0m] - Writing /tmp/tmpamza028f/_remote_module_non_sriptable.py[0m
+[[36m2022-06-15 09:35:15,517[0m][[34msrc.training_pipeline[0m][[32mINFO[0m] - Instantiating callback <pytorch_lightning.callbacks.ModelCheckpoint>[0m
+[[36m2022-06-15 09:35:15,518[0m][[34msrc.training_pipeline[0m][[32mINFO[0m] - Instantiating callback <pytorch_lightning.callbacks.EarlyStopping>[0m
+[[36m2022-06-15 09:35:15,518[0m][[34msrc.training_pipeline[0m][[32mINFO[0m] - Instantiating callback <pytorch_lightning.callbacks.RichModelSummary>[0m
+[[36m2022-06-15 09:35:15,519[0m][[34msrc.training_pipeline[0m][[32mINFO[0m] - Instantiating callback <pytorch_lightning.callbacks.RichProgressBar>[0m
+[[36m2022-06-15 09:35:15,519[0m][[34msrc.training_pipeline[0m][[32mINFO[0m] - Instantiating logger <pytorch_lightning.loggers.wandb.WandbLogger>[0m
+wandb: Currently logged in as: rshimogawa. Use `wandb login --relogin` to force relogin
+wandb: wandb version 0.12.18 is available!  To upgrade, please run:
+wandb:  $ pip install wandb --upgrade
+wandb: Tracking run with wandb version 0.12.16
+wandb: Run data is saved locally in /tmp/wandb/run-20220615_093516-6g9js550
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run Dense_3_Hidden_128_64_32_ELU
+wandb: ⭐️ View project at https://wandb.ai/rshimogawa/nngauss
+wandb: 🚀 View run at https://wandb.ai/rshimogawa/nngauss/runs/6g9js550
+[[36m2022-06-15 09:35:21,003[0m][[34msrc.training_pipeline[0m][[32mINFO[0m] - Instantiating trainer <pytorch_lightning.Trainer>[0m
+[[36m2022-06-15 09:35:21,040[0m][[34mpytorch_lightning.utilities.rank_zero[0m][[32mINFO[0m] - Trainer already configured with model summary callbacks: [<class 'pytorch_lightning.callbacks.rich_model_summary.RichModelSummary'>]. Skipping setting a default `ModelSummary` callback.[0m
+[[36m2022-06-15 09:35:21,040[0m][[34mpytorch_lightning.utilities.rank_zero[0m][[32mINFO[0m] - GPU available: True, used: True[0m
+[[36m2022-06-15 09:35:21,040[0m][[34mpytorch_lightning.utilities.rank_zero[0m][[32mINFO[0m] - TPU available: False, using: 0 TPU cores[0m
+[[36m2022-06-15 09:35:21,040[0m][[34mpytorch_lightning.utilities.rank_zero[0m][[32mINFO[0m] - IPU available: False, using: 0 IPUs[0m
+[[36m2022-06-15 09:35:21,040[0m][[34mpytorch_lightning.utilities.rank_zero[0m][[32mINFO[0m] - HPU available: False, using: 0 HPUs[0m
+[[36m2022-06-15 09:35:21,041[0m][[34msrc.training_pipeline[0m][[32mINFO[0m] - Logging hyperparameters![0m
+[[36m2022-06-15 09:35:21,045[0m][[34msrc.training_pipeline[0m][[32mINFO[0m] - Starting training![0m
+[[36m2022-06-15 09:35:23,327[0m][[34mpytorch_lightning.accelerators.gpu[0m][[32mINFO[0m] - LOCAL_RANK: 0 - CUDA_VISIBLE_DEVICES: [0,1][0m
+┏━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━┓
+┃    ┃ Name         ┃ Type                     ┃ Params ┃
+┡━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━┩
+│ 0  │ net          │ SimpleDenseNet_ELU_gauss │ 23.8 K │
+│ 1  │ net.model    │ Sequential               │ 23.8 K │
+│ 2  │ net.model.0  │ Linear                   │ 12.9 K │
+│ 3  │ net.model.1  │ BatchNorm1d              │    256 │
+│ 4  │ net.model.2  │ ELU                      │      0 │
+│ 5  │ net.model.3  │ Linear                   │  8.3 K │
+│ 6  │ net.model.4  │ BatchNorm1d              │    128 │
+│ 7  │ net.model.5  │ ELU                      │      0 │
+│ 8  │ net.model.6  │ Linear                   │  2.1 K │
+│ 9  │ net.model.7  │ BatchNorm1d              │     64 │
+│ 10 │ net.model.8  │ ELU                      │      0 │
+│ 11 │ net.model.9  │ Linear                   │     66 │
+│ 12 │ criterion    │ MSELoss                  │      0 │
+│ 13 │ train_acc    │ MeanSquaredError         │      0 │
+│ 14 │ val_acc      │ MeanSquaredError         │      0 │
+│ 15 │ test_acc     │ MeanSquaredError         │      0 │
+│ 16 │ val_acc_best │ MinMetric                │      0 │
+└────┴──────────────┴──────────────────────────┴────────┘
+Trainable params: 23.8 K                                                        
+Non-trainable params: 0                                                         
+Total params: 23.8 K                                                            
+Total estimated model params size (MB): 0                                       
+Epoch 99  ━━━━━━━━━━━━━━━━ 704/704 0:00:02 •        284.09it/s loss: 0.905      
+                                   0:00:00                     v_num: s550      
+                                                               val/acc: 0.479   
+                                                               val/acc_best:    
+                                                               0.384 train/acc: 
+                                                               0.858            
+[[36m2022-06-15 09:39:34,654[0m][[34msrc.training_pipeline[0m][[32mINFO[0m] - Starting testing![0m
+[[36m2022-06-15 09:39:34,656[0m][[34mpytorch_lightning.utilities.rank_zero[0m][[32mINFO[0m] - Restoring states from the checkpoint path at /home/ryuichi/machine_learning/nngauss/logs/experiments/multiruns/Dense_3_Hidden_128_64_32_ELU/2022-06-15_09-35-11/experiment=gauss_03/checkpoints/epoch_002.ckpt[0m
+[[36m2022-06-15 09:39:34,660[0m][[34mpytorch_lightning.accelerators.gpu[0m][[32mINFO[0m] - LOCAL_RANK: 0 - CUDA_VISIBLE_DEVICES: [0,1][0m
+[[36m2022-06-15 09:39:34,660[0m][[34mpytorch_lightning.utilities.rank_zero[0m][[32mINFO[0m] - Loaded model weights from checkpoint at /home/ryuichi/machine_learning/nngauss/logs/experiments/multiruns/Dense_3_Hidden_128_64_32_ELU/2022-06-15_09-35-11/experiment=gauss_03/checkpoints/epoch_002.ckpt[0m
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃        Test metric        ┃       DataLoader 0        ┃
+┡━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━┩
+│         test/acc          │    0.7315894365310669     │
+│         test/loss         │    0.7315894365310669     │
+└───────────────────────────┴───────────────────────────┘
+Testing ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 79/79 0:00:00 • 0:00:00 783.65it/s 
+[[36m2022-06-15 09:39:35,053[0m][[34msrc.training_pipeline[0m][[32mINFO[0m] - Finalizing![0m
+wandb: Waiting for W&B process to finish... (success).
+wandb: - 0.299 MB of 0.390 MB uploaded (0.000 MB deduped)wandb: \ 0.390 MB of 0.390 MB uploaded (0.000 MB deduped)wandb: | 0.390 MB of 0.407 MB uploaded (0.000 MB deduped)wandb: / 0.390 MB of 0.407 MB uploaded (0.000 MB deduped)wandb: - 0.390 MB of 0.407 MB uploaded (0.000 MB deduped)wandb: \ 0.390 MB of 0.407 MB uploaded (0.000 MB deduped)wandb: | 0.390 MB of 0.407 MB uploaded (0.000 MB deduped)wandb: / 0.390 MB of 0.407 MB uploaded (0.000 MB deduped)wandb: - 0.394 MB of 0.407 MB uploaded (0.000 MB deduped)wandb: \ 0.407 MB of 0.407 MB uploaded (0.000 MB deduped)wandb: | 0.407 MB of 0.407 MB uploaded (0.000 MB deduped)wandb: / 0.407 MB of 0.407 MB uploaded (0.000 MB deduped)wandb: - 0.407 MB of 0.407 MB uploaded (0.000 MB deduped)wandb: \ 0.407 MB of 0.407 MB uploaded (0.000 MB deduped)wandb: | 0.407 MB of 0.407 MB uploaded (0.000 MB deduped)wandb: / 0.407 MB of 0.407 MB uploaded (0.000 MB deduped)wandb:                                                                                
+wandb: 
+wandb: Run history:
+wandb:               epoch ▁▁▁▁▂▂▂▂▂▃▃▃▃▃▃▄▄▄▄▄▅▅▅▅▅▅▆▆▆▆▆▇▇▇▇▇▇███
+wandb:            test/acc ▁
+wandb:           test/loss ▁
+wandb:           train/acc █▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+wandb:          train/loss █▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+wandb: trainer/global_step ▁▁▁▁▂▂▂▂▂▃▃▃▃▃▃▄▄▄▄▄▅▅▅▅▅▆▆▆▆▆▆▇▇▇▇▇████
+wandb:             val/acc ▇█▆▄▇▄▂▃▄▃▃▂▃▄▃▂▂▂▂▄▁▂▁▂▁▃▂▁▁▂▁▂▂▂▂▄▁▂▂▃
+wandb:        val/acc_best █▇▆▅▅▄▃▃▃▃▃▃▃▂▂▂▂▂▂▂▂▂▂▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+wandb:            val/loss ▇█▆▄▇▄▂▃▄▃▃▂▃▄▃▂▂▂▂▄▁▂▁▂▁▃▂▁▁▂▁▂▂▂▂▄▁▂▂▃
+wandb: 
+wandb: Run summary:
+wandb:               epoch 2
+wandb:            test/acc 0.73159
+wandb:           test/loss 0.73159
+wandb:           train/acc 0.85764
+wandb:          train/loss 0.85764
+wandb: trainer/global_step 62500
+wandb:             val/acc 0.47857
+wandb:        val/acc_best 0.38381
+wandb:            val/loss 0.47857
+wandb: 
+wandb: Synced Dense_3_Hidden_128_64_32_ELU: https://wandb.ai/rshimogawa/nngauss/runs/6g9js550
+wandb: Synced 6 W&B file(s), 2 media file(s), 0 artifact file(s) and 0 other file(s)
+wandb: Find logs at: /tmp/wandb/run-20220615_093516-6g9js550/logs
+<pytorch_lightning.loggers.wandb.WandbLogger object at 0x7f4f2dfd63a0>
+True
+[[36m2022-06-15 09:39:40,017[0m][[34msrc.training_pipeline[0m][[32mINFO[0m] - Best model ckpt at /home/ryuichi/machine_learning/nngauss/logs/experiments/multiruns/Dense_3_Hidden_128_64_32_ELU/2022-06-15_09-35-11/experiment=gauss_03/checkpoints/epoch_002.ckpt[0m
+/home/ryuichi/machine_learning/nngauss/train.py:10: UserWarning: 
+The version_base parameter is not specified.
+Please specify a compatability version level, or None.
+Will assume defaults for version 1.1
+  @hydra.main(config_path="configs/", config_name="train.yaml")
+[[36m2022-06-15 09:39:41,904[0m][[35mHYDRA[0m] Launching 1 jobs locally[0m
+[[36m2022-06-15 09:39:41,904[0m][[35mHYDRA[0m] 	#0 : experiment=gauss_04[0m
+/home/ryuichi/mambaforge/envs/lhtrain/lib/python3.9/site-packages/hydra/_internal/core_plugins/basic_launcher.py:74: UserWarning: Future Hydra versions will no longer change working directory at job runtime by default.
+See https://hydra.cc/docs/next/upgrades/1.1_to_1.2/changes_to_job_working_dir/ for more information.
+  ret = run_job(
+[[36m2022-06-15 09:39:43,168[0m][[34msrc.utils[0m][[32mINFO[0m] - Disabling python warnings! <config.ignore_warnings=True>[0m
+[[36m2022-06-15 09:39:43,169[0m][[34msrc.utils[0m][[32mINFO[0m] - Printing config tree with Rich! <config.print_config=True>[0m
+CONFIG
+├── datamodule
+│   └── _target_: src.datamodules.gauss_datamodule.gaussDataModule              
+│       data_dir: /home/ryuichi/machine_learning/nngauss/data/                  
+│       batch_size: 64                                                          
+│       train_val_test_split:                                                   
+│       - 40000                                                                 
+│       - 5000                                                                  
+│       - 5000                                                                  
+│       num_workers: 0                                                          
+│       pin_memory: false                                                       
+│                                                                               
+├── model
+│   └── _target_: src.models.gauss_module.gaussLitModule                        
+│       lr: 0.001                                                               
+│       weight_decay: 0.0005                                                    
+│       net:                                                                    
+│         _target_: src.models.components.gauss_net.SimpleDenseNet_SS_gauss     
+│         input_size: 100                                                       
+│         lin1_size: 128                                                        
+│         lin2_size: 64                                                         
+│         lin3_size: 32                                                         
+│         output_size: 2                                                        
+│                                                                               
+├── callbacks
+│   └── model_checkpoint:                                                       
+│         _target_: pytorch_lightning.callbacks.ModelCheckpoint                 
+│         monitor: val/acc                                                      
+│         mode: max                                                             
+│         save_top_k: 1                                                         
+│         save_last: true                                                       
+│         verbose: false                                                        
+│         dirpath: checkpoints/                                                 
+│         filename: epoch_{epoch:03d}                                           
+│         auto_insert_metric_name: false                                        
+│       early_stopping:                                                         
+│         _target_: pytorch_lightning.callbacks.EarlyStopping                   
+│         monitor: val/acc                                                      
+│         mode: max                                                             
+│         patience: 100                                                         
+│         min_delta: 0                                                          
+│       model_summary:                                                          
+│         _target_: pytorch_lightning.callbacks.RichModelSummary                
+│         max_depth: -1                                                         
+│       rich_progress_bar:                                                      
+│         _target_: pytorch_lightning.callbacks.RichProgressBar                 
+│                                                                               
+├── logger
+│   └── wandb:                                                                  
+│         _target_: pytorch_lightning.loggers.wandb.WandbLogger                 
+│         project: nngauss                                                      
+│         name: Dense_3_Hidden_128_64_32_SoftShrink                             
+│         save_dir: /tmp                                                        
+│         offline: false                                                        
+│         id: null                                                              
+│         log_model: false                                                      
+│         prefix: ''                                                            
+│         job_type: train                                                       
+│         group: ''                                                             
+│         tags:                                                                 
+│         - gauss                                                               
+│         - Dense_3_Hidden_128_64_32_SoftShrink                                 
+│                                                                               
+├── trainer
+│   └── _target_: pytorch_lightning.Trainer                                     
+│       gpus: 1                                                                 
+│       min_epochs: 1                                                           
+│       max_epochs: 100                                                         
+│       resume_from_checkpoint: null                                            
+│       gradient_clip_val: 0.5                                                  
+│                                                                               
+├── original_work_dir
+│   └── /home/ryuichi/machine_learning/nngauss                                  
+├── data_dir
+│   └── /home/ryuichi/machine_learning/nngauss/data/                            
+├── print_config
+│   └── True                                                                    
+├── ignore_warnings
+│   └── True                                                                    
+├── train
+│   └── True                                                                    
+├── test
+│   └── True                                                                    
+├── seed
+│   └── 0                                                                       
+└── name
+    └── Dense_3_Hidden_128_64_32_SoftShrink                                     
+[[36m2022-06-15 09:39:43,197[0m][[34msrc.training_pipeline[0m][[32mINFO[0m] - Instantiating datamodule <src.datamodules.gauss_datamodule.gaussDataModule>[0m
+[[36m2022-06-15 09:39:43,199[0m][[34msrc.training_pipeline[0m][[32mINFO[0m] - Instantiating model <src.models.gauss_module.gaussLitModule>[0m
+[[36m2022-06-15 09:39:43,402[0m][[34mtorch.distributed.nn.jit.instantiator[0m][[32mINFO[0m] - Created a temporary directory at /tmp/tmpmlro1m_n[0m
+[[36m2022-06-15 09:39:43,402[0m][[34mtorch.distributed.nn.jit.instantiator[0m][[32mINFO[0m] - Writing /tmp/tmpmlro1m_n/_remote_module_non_sriptable.py[0m
+[[36m2022-06-15 09:39:43,409[0m][[34msrc.training_pipeline[0m][[32mINFO[0m] - Instantiating callback <pytorch_lightning.callbacks.ModelCheckpoint>[0m
+[[36m2022-06-15 09:39:43,410[0m][[34msrc.training_pipeline[0m][[32mINFO[0m] - Instantiating callback <pytorch_lightning.callbacks.EarlyStopping>[0m
+[[36m2022-06-15 09:39:43,411[0m][[34msrc.training_pipeline[0m][[32mINFO[0m] - Instantiating callback <pytorch_lightning.callbacks.RichModelSummary>[0m
+[[36m2022-06-15 09:39:43,411[0m][[34msrc.training_pipeline[0m][[32mINFO[0m] - Instantiating callback <pytorch_lightning.callbacks.RichProgressBar>[0m
+[[36m2022-06-15 09:39:43,411[0m][[34msrc.training_pipeline[0m][[32mINFO[0m] - Instantiating logger <pytorch_lightning.loggers.wandb.WandbLogger>[0m
+wandb: Currently logged in as: rshimogawa. Use `wandb login --relogin` to force relogin
+wandb: wandb version 0.12.18 is available!  To upgrade, please run:
+wandb:  $ pip install wandb --upgrade
+wandb: Tracking run with wandb version 0.12.16
+wandb: Run data is saved locally in /tmp/wandb/run-20220615_093944-36m2alcn
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run Dense_3_Hidden_128_64_32_SoftShrink
+wandb: ⭐️ View project at https://wandb.ai/rshimogawa/nngauss
+wandb: 🚀 View run at https://wandb.ai/rshimogawa/nngauss/runs/36m2alcn
+[[36m2022-06-15 09:39:48,231[0m][[34msrc.training_pipeline[0m][[32mINFO[0m] - Instantiating trainer <pytorch_lightning.Trainer>[0m
+[[36m2022-06-15 09:39:48,259[0m][[34mpytorch_lightning.utilities.rank_zero[0m][[32mINFO[0m] - Trainer already configured with model summary callbacks: [<class 'pytorch_lightning.callbacks.rich_model_summary.RichModelSummary'>]. Skipping setting a default `ModelSummary` callback.[0m
+[[36m2022-06-15 09:39:48,259[0m][[34mpytorch_lightning.utilities.rank_zero[0m][[32mINFO[0m] - GPU available: True, used: True[0m
+[[36m2022-06-15 09:39:48,259[0m][[34mpytorch_lightning.utilities.rank_zero[0m][[32mINFO[0m] - TPU available: False, using: 0 TPU cores[0m
+[[36m2022-06-15 09:39:48,259[0m][[34mpytorch_lightning.utilities.rank_zero[0m][[32mINFO[0m] - IPU available: False, using: 0 IPUs[0m
+[[36m2022-06-15 09:39:48,259[0m][[34mpytorch_lightning.utilities.rank_zero[0m][[32mINFO[0m] - HPU available: False, using: 0 HPUs[0m
+[[36m2022-06-15 09:39:48,259[0m][[34msrc.training_pipeline[0m][[32mINFO[0m] - Logging hyperparameters![0m
+[[36m2022-06-15 09:39:48,262[0m][[34msrc.training_pipeline[0m][[32mINFO[0m] - Starting training![0m
+[[36m2022-06-15 09:39:50,358[0m][[34mpytorch_lightning.accelerators.gpu[0m][[32mINFO[0m] - LOCAL_RANK: 0 - CUDA_VISIBLE_DEVICES: [0,1][0m
+┏━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━┓
+┃    ┃ Name         ┃ Type                    ┃ Params ┃
+┡━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━┩
+│ 0  │ net          │ SimpleDenseNet_SS_gauss │ 23.8 K │
+│ 1  │ net.model    │ Sequential              │ 23.8 K │
+│ 2  │ net.model.0  │ Linear                  │ 12.9 K │
+│ 3  │ net.model.1  │ BatchNorm1d             │    256 │
+│ 4  │ net.model.2  │ Softshrink              │      0 │
+│ 5  │ net.model.3  │ Linear                  │  8.3 K │
+│ 6  │ net.model.4  │ BatchNorm1d             │    128 │
+│ 7  │ net.model.5  │ Softshrink              │      0 │
+│ 8  │ net.model.6  │ Linear                  │  2.1 K │
+│ 9  │ net.model.7  │ BatchNorm1d             │     64 │
+│ 10 │ net.model.8  │ Softshrink              │      0 │
+│ 11 │ net.model.9  │ Linear                  │     66 │
+│ 12 │ criterion    │ MSELoss                 │      0 │
+│ 13 │ train_acc    │ MeanSquaredError        │      0 │
+│ 14 │ val_acc      │ MeanSquaredError        │      0 │
+│ 15 │ test_acc     │ MeanSquaredError        │      0 │
+│ 16 │ val_acc_best │ MinMetric               │      0 │
+└────┴──────────────┴─────────────────────────┴────────┘
+Trainable params: 23.8 K                                                        
+Non-trainable params: 0                                                         
+Total params: 23.8 K                                                            
+Total estimated model params size (MB): 0                                       
+Epoch 99  ━━━━━━━━━━━━━━━━ 704/704 0:00:02 •        281.72it/s loss: 0.217      
+                                   0:00:00                     v_num: alcn      
+                                                               val/acc: 0.147   
+                                                               val/acc_best:    
+                                                               0.122 train/acc: 
+                                                               0.242            
+[[36m2022-06-15 09:44:01,630[0m][[34msrc.training_pipeline[0m][[32mINFO[0m] - Starting testing![0m
+[[36m2022-06-15 09:44:01,632[0m][[34mpytorch_lightning.utilities.rank_zero[0m][[32mINFO[0m] - Restoring states from the checkpoint path at /home/ryuichi/machine_learning/nngauss/logs/experiments/multiruns/Dense_3_Hidden_128_64_32_SoftShrink/2022-06-15_09-39-41/experiment=gauss_04/checkpoints/epoch_000.ckpt[0m
+[[36m2022-06-15 09:44:01,636[0m][[34mpytorch_lightning.accelerators.gpu[0m][[32mINFO[0m] - LOCAL_RANK: 0 - CUDA_VISIBLE_DEVICES: [0,1][0m
+[[36m2022-06-15 09:44:01,637[0m][[34mpytorch_lightning.utilities.rank_zero[0m][[32mINFO[0m] - Loaded model weights from checkpoint at /home/ryuichi/machine_learning/nngauss/logs/experiments/multiruns/Dense_3_Hidden_128_64_32_SoftShrink/2022-06-15_09-39-41/experiment=gauss_04/checkpoints/epoch_000.ckpt[0m
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃        Test metric        ┃       DataLoader 0        ┃
+┡━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━┩
+│         test/acc          │    1.9462816715240479     │
+│         test/loss         │    1.9462816715240479     │
+└───────────────────────────┴───────────────────────────┘
+Testing ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 79/79 0:00:00 • 0:00:00 778.22it/s 
+[[36m2022-06-15 09:44:02,112[0m][[34msrc.training_pipeline[0m][[32mINFO[0m] - Finalizing![0m
+wandb: Waiting for W&B process to finish... (success).
+wandb: - 0.362 MB of 0.390 MB uploaded (0.000 MB deduped)wandb: \ 0.362 MB of 0.390 MB uploaded (0.000 MB deduped)wandb: | 0.390 MB of 0.407 MB uploaded (0.000 MB deduped)wandb: / 0.390 MB of 0.407 MB uploaded (0.000 MB deduped)wandb: - 0.390 MB of 0.407 MB uploaded (0.000 MB deduped)wandb: \ 0.390 MB of 0.407 MB uploaded (0.000 MB deduped)wandb: | 0.394 MB of 0.407 MB uploaded (0.000 MB deduped)wandb: / 0.403 MB of 0.407 MB uploaded (0.000 MB deduped)wandb: - 0.403 MB of 0.407 MB uploaded (0.000 MB deduped)wandb: \ 0.403 MB of 0.407 MB uploaded (0.000 MB deduped)wandb: | 0.407 MB of 0.407 MB uploaded (0.000 MB deduped)wandb: / 0.407 MB of 0.407 MB uploaded (0.000 MB deduped)wandb: - 0.407 MB of 0.407 MB uploaded (0.000 MB deduped)wandb: \ 0.407 MB of 0.407 MB uploaded (0.000 MB deduped)wandb: | 0.407 MB of 0.407 MB uploaded (0.000 MB deduped)wandb: / 0.407 MB of 0.407 MB uploaded (0.000 MB deduped)wandb:                                                                                
+wandb: 
+wandb: Run history:
+wandb:               epoch ▁▁▁▁▂▂▂▂▂▃▃▃▃▃▃▄▄▄▄▄▅▅▅▅▅▅▆▆▆▆▆▇▇▇▇▇▇███
+wandb:            test/acc ▁
+wandb:           test/loss ▁
+wandb:           train/acc █▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+wandb:          train/loss █▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+wandb: trainer/global_step ▁▁▁▁▂▂▂▂▂▃▃▃▃▃▃▄▄▄▄▄▅▅▅▅▅▆▆▆▆▆▆▇▇▇▇▇████
+wandb:             val/acc █▂▂▂▂▂▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+wandb:        val/acc_best █▂▂▂▂▂▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+wandb:            val/loss █▂▂▂▂▂▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+wandb: 
+wandb: Run summary:
+wandb:               epoch 0
+wandb:            test/acc 1.94628
+wandb:           test/loss 1.94628
+wandb:           train/acc 0.24216
+wandb:          train/loss 0.24216
+wandb: trainer/global_step 62500
+wandb:             val/acc 0.14683
+wandb:        val/acc_best 0.12181
+wandb:            val/loss 0.14683
+wandb: 
+wandb: Synced Dense_3_Hidden_128_64_32_SoftShrink: https://wandb.ai/rshimogawa/nngauss/runs/36m2alcn
+wandb: Synced 6 W&B file(s), 2 media file(s), 0 artifact file(s) and 0 other file(s)
+wandb: Find logs at: /tmp/wandb/run-20220615_093944-36m2alcn/logs
+<pytorch_lightning.loggers.wandb.WandbLogger object at 0x7f642504c310>
+True
+[[36m2022-06-15 09:44:06,358[0m][[34msrc.training_pipeline[0m][[32mINFO[0m] - Best model ckpt at /home/ryuichi/machine_learning/nngauss/logs/experiments/multiruns/Dense_3_Hidden_128_64_32_SoftShrink/2022-06-15_09-39-41/experiment=gauss_04/checkpoints/epoch_000.ckpt[0m
+/home/ryuichi/machine_learning/nngauss/train.py:10: UserWarning: 
+The version_base parameter is not specified.
+Please specify a compatability version level, or None.
+Will assume defaults for version 1.1
+  @hydra.main(config_path="configs/", config_name="train.yaml")
+[[36m2022-06-15 09:44:08,386[0m][[35mHYDRA[0m] Launching 1 jobs locally[0m
+[[36m2022-06-15 09:44:08,387[0m][[35mHYDRA[0m] 	#0 : experiment=gauss_05[0m
+/home/ryuichi/mambaforge/envs/lhtrain/lib/python3.9/site-packages/hydra/_internal/core_plugins/basic_launcher.py:74: UserWarning: Future Hydra versions will no longer change working directory at job runtime by default.
+See https://hydra.cc/docs/next/upgrades/1.1_to_1.2/changes_to_job_working_dir/ for more information.
+  ret = run_job(
+[[36m2022-06-15 09:44:09,705[0m][[34msrc.utils[0m][[32mINFO[0m] - Disabling python warnings! <config.ignore_warnings=True>[0m
+[[36m2022-06-15 09:44:09,705[0m][[34msrc.utils[0m][[32mINFO[0m] - Printing config tree with Rich! <config.print_config=True>[0m
+CONFIG
+├── datamodule
+│   └── _target_: src.datamodules.gauss_datamodule.gaussDataModule              
+│       data_dir: /home/ryuichi/machine_learning/nngauss/data/                  
+│       batch_size: 64                                                          
+│       train_val_test_split:                                                   
+│       - 40000                                                                 
+│       - 5000                                                                  
+│       - 5000                                                                  
+│       num_workers: 0                                                          
+│       pin_memory: false                                                       
+│                                                                               
+├── model
+│   └── _target_: src.models.gauss_module.gaussLitModule                        
+│       lr: 0.001                                                               
+│       weight_decay: 0.0005                                                    
+│       net:                                                                    
+│         _target_: src.models.components.gauss_net.SimpleDenseNet_LR_gauss     
+│         input_size: 100                                                       
+│         lin1_size: 128                                                        
+│         lin2_size: 64                                                         
+│         lin3_size: 32                                                         
+│         output_size: 2                                                        
+│                                                                               
+├── callbacks
+│   └── model_checkpoint:                                                       
+│         _target_: pytorch_lightning.callbacks.ModelCheckpoint                 
+│         monitor: val/acc                                                      
+│         mode: max                                                             
+│         save_top_k: 1                                                         
+│         save_last: true                                                       
+│         verbose: false                                                        
+│         dirpath: checkpoints/                                                 
+│         filename: epoch_{epoch:03d}                                           
+│         auto_insert_metric_name: false                                        
+│       early_stopping:                                                         
+│         _target_: pytorch_lightning.callbacks.EarlyStopping                   
+│         monitor: val/acc                                                      
+│         mode: max                                                             
+│         patience: 100                                                         
+│         min_delta: 0                                                          
+│       model_summary:                                                          
+│         _target_: pytorch_lightning.callbacks.RichModelSummary                
+│         max_depth: -1                                                         
+│       rich_progress_bar:                                                      
+│         _target_: pytorch_lightning.callbacks.RichProgressBar                 
+│                                                                               
+├── logger
+│   └── wandb:                                                                  
+│         _target_: pytorch_lightning.loggers.wandb.WandbLogger                 
+│         project: nngauss                                                      
+│         name: Dense_3_Hidden_128_64_32_LeakyReLU                              
+│         save_dir: /tmp                                                        
+│         offline: false                                                        
+│         id: null                                                              
+│         log_model: false                                                      
+│         prefix: ''                                                            
+│         job_type: train                                                       
+│         group: ''                                                             
+│         tags:                                                                 
+│         - gauss                                                               
+│         - Dense_3_Hidden_128_64_32_LeakyReLU                                  
+│                                                                               
+├── trainer
+│   └── _target_: pytorch_lightning.Trainer                                     
+│       gpus: 1                                                                 
+│       min_epochs: 1                                                           
+│       max_epochs: 100                                                         
+│       resume_from_checkpoint: null                                            
+│       gradient_clip_val: 0.5                                                  
+│                                                                               
+├── original_work_dir
+│   └── /home/ryuichi/machine_learning/nngauss                                  
+├── data_dir
+│   └── /home/ryuichi/machine_learning/nngauss/data/                            
+├── print_config
+│   └── True                                                                    
+├── ignore_warnings
+│   └── True                                                                    
+├── train
+│   └── True                                                                    
+├── test
+│   └── True                                                                    
+├── seed
+│   └── 0                                                                       
+└── name
+    └── Dense_3_Hidden_128_64_32_LeakyReLU                                      
+[[36m2022-06-15 09:44:09,733[0m][[34msrc.training_pipeline[0m][[32mINFO[0m] - Instantiating datamodule <src.datamodules.gauss_datamodule.gaussDataModule>[0m
+[[36m2022-06-15 09:44:09,735[0m][[34msrc.training_pipeline[0m][[32mINFO[0m] - Instantiating model <src.models.gauss_module.gaussLitModule>[0m
+[[36m2022-06-15 09:44:09,932[0m][[34mtorch.distributed.nn.jit.instantiator[0m][[32mINFO[0m] - Created a temporary directory at /tmp/tmpx528yzns[0m
+[[36m2022-06-15 09:44:09,933[0m][[34mtorch.distributed.nn.jit.instantiator[0m][[32mINFO[0m] - Writing /tmp/tmpx528yzns/_remote_module_non_sriptable.py[0m
+[[36m2022-06-15 09:44:09,940[0m][[34msrc.training_pipeline[0m][[32mINFO[0m] - Instantiating callback <pytorch_lightning.callbacks.ModelCheckpoint>[0m
+[[36m2022-06-15 09:44:09,941[0m][[34msrc.training_pipeline[0m][[32mINFO[0m] - Instantiating callback <pytorch_lightning.callbacks.EarlyStopping>[0m
+[[36m2022-06-15 09:44:09,941[0m][[34msrc.training_pipeline[0m][[32mINFO[0m] - Instantiating callback <pytorch_lightning.callbacks.RichModelSummary>[0m
+[[36m2022-06-15 09:44:09,942[0m][[34msrc.training_pipeline[0m][[32mINFO[0m] - Instantiating callback <pytorch_lightning.callbacks.RichProgressBar>[0m
+[[36m2022-06-15 09:44:09,942[0m][[34msrc.training_pipeline[0m][[32mINFO[0m] - Instantiating logger <pytorch_lightning.loggers.wandb.WandbLogger>[0m
+wandb: Currently logged in as: rshimogawa. Use `wandb login --relogin` to force relogin
+wandb: wandb version 0.12.18 is available!  To upgrade, please run:
+wandb:  $ pip install wandb --upgrade
+wandb: Tracking run with wandb version 0.12.16
+wandb: Run data is saved locally in /tmp/wandb/run-20220615_094410-16sdi56t
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run Dense_3_Hidden_128_64_32_LeakyReLU
+wandb: ⭐️ View project at https://wandb.ai/rshimogawa/nngauss
+wandb: 🚀 View run at https://wandb.ai/rshimogawa/nngauss/runs/16sdi56t
+[[36m2022-06-15 09:44:14,636[0m][[34msrc.training_pipeline[0m][[32mINFO[0m] - Instantiating trainer <pytorch_lightning.Trainer>[0m
+[[36m2022-06-15 09:44:14,666[0m][[34mpytorch_lightning.utilities.rank_zero[0m][[32mINFO[0m] - Trainer already configured with model summary callbacks: [<class 'pytorch_lightning.callbacks.rich_model_summary.RichModelSummary'>]. Skipping setting a default `ModelSummary` callback.[0m
+[[36m2022-06-15 09:44:14,667[0m][[34mpytorch_lightning.utilities.rank_zero[0m][[32mINFO[0m] - GPU available: True, used: True[0m
+[[36m2022-06-15 09:44:14,667[0m][[34mpytorch_lightning.utilities.rank_zero[0m][[32mINFO[0m] - TPU available: False, using: 0 TPU cores[0m
+[[36m2022-06-15 09:44:14,667[0m][[34mpytorch_lightning.utilities.rank_zero[0m][[32mINFO[0m] - IPU available: False, using: 0 IPUs[0m
+[[36m2022-06-15 09:44:14,667[0m][[34mpytorch_lightning.utilities.rank_zero[0m][[32mINFO[0m] - HPU available: False, using: 0 HPUs[0m
+[[36m2022-06-15 09:44:14,667[0m][[34msrc.training_pipeline[0m][[32mINFO[0m] - Logging hyperparameters![0m
+[[36m2022-06-15 09:44:14,670[0m][[34msrc.training_pipeline[0m][[32mINFO[0m] - Starting training![0m
+[[36m2022-06-15 09:44:16,757[0m][[34mpytorch_lightning.accelerators.gpu[0m][[32mINFO[0m] - LOCAL_RANK: 0 - CUDA_VISIBLE_DEVICES: [0,1][0m
+┏━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━┓
+┃    ┃ Name         ┃ Type                    ┃ Params ┃
+┡━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━┩
+│ 0  │ net          │ SimpleDenseNet_LR_gauss │ 23.8 K │
+│ 1  │ net.model    │ Sequential              │ 23.8 K │
+│ 2  │ net.model.0  │ Linear                  │ 12.9 K │
+│ 3  │ net.model.1  │ BatchNorm1d             │    256 │
+│ 4  │ net.model.2  │ LeakyReLU               │      0 │
+│ 5  │ net.model.3  │ Linear                  │  8.3 K │
+│ 6  │ net.model.4  │ BatchNorm1d             │    128 │
+│ 7  │ net.model.5  │ LeakyReLU               │      0 │
+│ 8  │ net.model.6  │ Linear                  │  2.1 K │
+│ 9  │ net.model.7  │ BatchNorm1d             │     64 │
+│ 10 │ net.model.8  │ LeakyReLU               │      0 │
+│ 11 │ net.model.9  │ Linear                  │     66 │
+│ 12 │ criterion    │ MSELoss                 │      0 │
+│ 13 │ train_acc    │ MeanSquaredError        │      0 │
+│ 14 │ val_acc      │ MeanSquaredError        │      0 │
+│ 15 │ test_acc     │ MeanSquaredError        │      0 │
+│ 16 │ val_acc_best │ MinMetric               │      0 │
+└────┴──────────────┴─────────────────────────┴────────┘
+Trainable params: 23.8 K                                                        
+Non-trainable params: 0                                                         
+Total params: 23.8 K                                                            
+Total estimated model params size (MB): 0                                       
+Epoch 99  ━━━━━━━━━━━━━━━━ 704/704 0:00:02 •        281.87it/s loss: 0.25 v_num:
+                                   0:00:00                     i56t val/acc:    
+                                                               0.124            
+                                                               val/acc_best:    
+                                                               0.112 train/acc: 
+                                                               0.257            
+[[36m2022-06-15 09:48:29,372[0m][[34msrc.training_pipeline[0m][[32mINFO[0m] - Starting testing![0m
+[[36m2022-06-15 09:48:29,374[0m][[34mpytorch_lightning.utilities.rank_zero[0m][[32mINFO[0m] - Restoring states from the checkpoint path at /home/ryuichi/machine_learning/nngauss/logs/experiments/multiruns/Dense_3_Hidden_128_64_32_LeakyReLU/2022-06-15_09-44-08/experiment=gauss_05/checkpoints/epoch_001.ckpt[0m
+[[36m2022-06-15 09:48:29,378[0m][[34mpytorch_lightning.accelerators.gpu[0m][[32mINFO[0m] - LOCAL_RANK: 0 - CUDA_VISIBLE_DEVICES: [0,1][0m
+[[36m2022-06-15 09:48:29,379[0m][[34mpytorch_lightning.utilities.rank_zero[0m][[32mINFO[0m] - Loaded model weights from checkpoint at /home/ryuichi/machine_learning/nngauss/logs/experiments/multiruns/Dense_3_Hidden_128_64_32_LeakyReLU/2022-06-15_09-44-08/experiment=gauss_05/checkpoints/epoch_001.ckpt[0m
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃        Test metric        ┃       DataLoader 0        ┃
+┡━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━┩
+│         test/acc          │    0.2891356945037842     │
+│         test/loss         │    0.2891356945037842     │
+└───────────────────────────┴───────────────────────────┘
+Testing ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 79/79 0:00:00 • 0:00:00 760.21it/s 
+[[36m2022-06-15 09:48:29,777[0m][[34msrc.training_pipeline[0m][[32mINFO[0m] - Finalizing![0m
+wandb: Waiting for W&B process to finish... (success).
+wandb: - 0.389 MB of 0.389 MB uploaded (0.000 MB deduped)wandb: \ 0.389 MB of 0.389 MB uploaded (0.000 MB deduped)wandb: | 0.389 MB of 0.389 MB uploaded (0.000 MB deduped)wandb: / 0.389 MB of 0.406 MB uploaded (0.000 MB deduped)wandb: - 0.389 MB of 0.406 MB uploaded (0.000 MB deduped)wandb: \ 0.389 MB of 0.406 MB uploaded (0.000 MB deduped)wandb: | 0.389 MB of 0.406 MB uploaded (0.000 MB deduped)wandb: / 0.389 MB of 0.406 MB uploaded (0.000 MB deduped)wandb: - 0.402 MB of 0.406 MB uploaded (0.000 MB deduped)wandb: \ 0.402 MB of 0.406 MB uploaded (0.000 MB deduped)wandb: | 0.406 MB of 0.406 MB uploaded (0.000 MB deduped)wandb: / 0.406 MB of 0.406 MB uploaded (0.000 MB deduped)wandb: - 0.406 MB of 0.406 MB uploaded (0.000 MB deduped)wandb: \ 0.406 MB of 0.406 MB uploaded (0.000 MB deduped)wandb: | 0.406 MB of 0.406 MB uploaded (0.000 MB deduped)wandb: / 0.406 MB of 0.406 MB uploaded (0.000 MB deduped)wandb: - 0.406 MB of 0.406 MB uploaded (0.000 MB deduped)wandb:                                                                                
+wandb: 
+wandb: Run history:
+wandb:               epoch ▁▁▁▁▂▂▂▂▂▃▃▃▃▃▃▄▄▄▄▄▅▅▅▅▅▅▆▆▆▆▆▇▇▇▇▇▇███
+wandb:            test/acc ▁
+wandb:           test/loss ▁
+wandb:           train/acc █▂▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+wandb:          train/loss █▂▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+wandb: trainer/global_step ▁▁▁▁▂▂▂▂▂▃▃▃▃▃▃▄▄▄▄▄▅▅▅▅▅▆▆▆▆▆▆▇▇▇▇▇████
+wandb:             val/acc █▆▄▅▅▄▃▂▃▃▂▄▁▃▃▅▃▄▃▂▂▄▂▃▃▃▁▄▃▂▂▄▅▂▄▃▄▂▄▂
+wandb:        val/acc_best █▆▄▄▄▄▃▂▂▂▂▂▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+wandb:            val/loss █▆▄▅▅▄▃▂▃▃▂▄▁▃▃▅▃▄▃▂▂▄▂▃▃▃▁▄▃▂▂▄▅▂▄▃▄▂▄▂
+wandb: 
+wandb: Run summary:
+wandb:               epoch 1
+wandb:            test/acc 0.28914
+wandb:           test/loss 0.28914
+wandb:           train/acc 0.25665
+wandb:          train/loss 0.25665
+wandb: trainer/global_step 62500
+wandb:             val/acc 0.12449
+wandb:        val/acc_best 0.11161
+wandb:            val/loss 0.12449
+wandb: 
+wandb: Synced Dense_3_Hidden_128_64_32_LeakyReLU: https://wandb.ai/rshimogawa/nngauss/runs/16sdi56t
+wandb: Synced 6 W&B file(s), 2 media file(s), 0 artifact file(s) and 0 other file(s)
+wandb: Find logs at: /tmp/wandb/run-20220615_094410-16sdi56t/logs
+<pytorch_lightning.loggers.wandb.WandbLogger object at 0x7f064be0ae80>
+True
+[[36m2022-06-15 09:48:34,041[0m][[34msrc.training_pipeline[0m][[32mINFO[0m] - Best model ckpt at /home/ryuichi/machine_learning/nngauss/logs/experiments/multiruns/Dense_3_Hidden_128_64_32_LeakyReLU/2022-06-15_09-44-08/experiment=gauss_05/checkpoints/epoch_001.ckpt[0m
+/home/ryuichi/machine_learning/nngauss/train.py:10: UserWarning: 
+The version_base parameter is not specified.
+Please specify a compatability version level, or None.
+Will assume defaults for version 1.1
+  @hydra.main(config_path="configs/", config_name="train.yaml")
+[[36m2022-06-15 09:48:35,988[0m][[35mHYDRA[0m] Launching 1 jobs locally[0m
+[[36m2022-06-15 09:48:35,988[0m][[35mHYDRA[0m] 	#0 : experiment=gauss_06[0m
+/home/ryuichi/mambaforge/envs/lhtrain/lib/python3.9/site-packages/hydra/_internal/core_plugins/basic_launcher.py:74: UserWarning: Future Hydra versions will no longer change working directory at job runtime by default.
+See https://hydra.cc/docs/next/upgrades/1.1_to_1.2/changes_to_job_working_dir/ for more information.
+  ret = run_job(
+[[36m2022-06-15 09:48:37,284[0m][[34msrc.utils[0m][[32mINFO[0m] - Disabling python warnings! <config.ignore_warnings=True>[0m
+[[36m2022-06-15 09:48:37,285[0m][[34msrc.utils[0m][[32mINFO[0m] - Printing config tree with Rich! <config.print_config=True>[0m
+CONFIG
+├── datamodule
+│   └── _target_: src.datamodules.gauss_datamodule.gaussDataModule              
+│       data_dir: /home/ryuichi/machine_learning/nngauss/data/                  
+│       batch_size: 64                                                          
+│       train_val_test_split:                                                   
+│       - 40000                                                                 
+│       - 5000                                                                  
+│       - 5000                                                                  
+│       num_workers: 0                                                          
+│       pin_memory: false                                                       
+│                                                                               
+├── model
+│   └── _target_: src.models.gauss_module.gaussLitModule                        
+│       lr: 0.001                                                               
+│       weight_decay: 0.0005                                                    
+│       net:                                                                    
+│         _target_: src.models.components.gauss_net.SimpleDenseNet_LL_gauss     
+│         input_size: 100                                                       
+│         lin1_size: 128                                                        
+│         lin2_size: 64                                                         
+│         lin3_size: 32                                                         
+│         output_size: 2                                                        
+│                                                                               
+├── callbacks
+│   └── model_checkpoint:                                                       
+│         _target_: pytorch_lightning.callbacks.ModelCheckpoint                 
+│         monitor: val/acc                                                      
+│         mode: max                                                             
+│         save_top_k: 1                                                         
+│         save_last: true                                                       
+│         verbose: false                                                        
+│         dirpath: checkpoints/                                                 
+│         filename: epoch_{epoch:03d}                                           
+│         auto_insert_metric_name: false                                        
+│       early_stopping:                                                         
+│         _target_: pytorch_lightning.callbacks.EarlyStopping                   
+│         monitor: val/acc                                                      
+│         mode: max                                                             
+│         patience: 100                                                         
+│         min_delta: 0                                                          
+│       model_summary:                                                          
+│         _target_: pytorch_lightning.callbacks.RichModelSummary                
+│         max_depth: -1                                                         
+│       rich_progress_bar:                                                      
+│         _target_: pytorch_lightning.callbacks.RichProgressBar                 
+│                                                                               
+├── logger
+│   └── wandb:                                                                  
+│         _target_: pytorch_lightning.loggers.wandb.WandbLogger                 
+│         project: nngauss                                                      
+│         name: Dense_3_Hidden_128_64_32_Linear                                 
+│         save_dir: /tmp                                                        
+│         offline: false                                                        
+│         id: null                                                              
+│         log_model: false                                                      
+│         prefix: ''                                                            
+│         job_type: train                                                       
+│         group: ''                                                             
+│         tags:                                                                 
+│         - gauss                                                               
+│         - Dense_3_Hidden_128_64_32_Linear                                     
+│                                                                               
+├── trainer
+│   └── _target_: pytorch_lightning.Trainer                                     
+│       gpus: 1                                                                 
+│       min_epochs: 1                                                           
+│       max_epochs: 100                                                         
+│       resume_from_checkpoint: null                                            
+│       gradient_clip_val: 0.5                                                  
+│                                                                               
+├── original_work_dir
+│   └── /home/ryuichi/machine_learning/nngauss                                  
+├── data_dir
+│   └── /home/ryuichi/machine_learning/nngauss/data/                            
+├── print_config
+│   └── True                                                                    
+├── ignore_warnings
+│   └── True                                                                    
+├── train
+│   └── True                                                                    
+├── test
+│   └── True                                                                    
+├── seed
+│   └── 0                                                                       
+└── name
+    └── Dense_3_Hidden_128_64_32_Linear                                         
+[[36m2022-06-15 09:48:37,313[0m][[34msrc.training_pipeline[0m][[32mINFO[0m] - Instantiating datamodule <src.datamodules.gauss_datamodule.gaussDataModule>[0m
+[[36m2022-06-15 09:48:37,316[0m][[34msrc.training_pipeline[0m][[32mINFO[0m] - Instantiating model <src.models.gauss_module.gaussLitModule>[0m
+[[36m2022-06-15 09:48:37,494[0m][[34mtorch.distributed.nn.jit.instantiator[0m][[32mINFO[0m] - Created a temporary directory at /tmp/tmpwuxkl9x8[0m
+[[36m2022-06-15 09:48:37,494[0m][[34mtorch.distributed.nn.jit.instantiator[0m][[32mINFO[0m] - Writing /tmp/tmpwuxkl9x8/_remote_module_non_sriptable.py[0m
+[[36m2022-06-15 09:48:37,500[0m][[34msrc.training_pipeline[0m][[32mINFO[0m] - Instantiating callback <pytorch_lightning.callbacks.ModelCheckpoint>[0m
+[[36m2022-06-15 09:48:37,501[0m][[34msrc.training_pipeline[0m][[32mINFO[0m] - Instantiating callback <pytorch_lightning.callbacks.EarlyStopping>[0m
+[[36m2022-06-15 09:48:37,502[0m][[34msrc.training_pipeline[0m][[32mINFO[0m] - Instantiating callback <pytorch_lightning.callbacks.RichModelSummary>[0m
+[[36m2022-06-15 09:48:37,502[0m][[34msrc.training_pipeline[0m][[32mINFO[0m] - Instantiating callback <pytorch_lightning.callbacks.RichProgressBar>[0m
+[[36m2022-06-15 09:48:37,503[0m][[34msrc.training_pipeline[0m][[32mINFO[0m] - Instantiating logger <pytorch_lightning.loggers.wandb.WandbLogger>[0m
+wandb: Currently logged in as: rshimogawa. Use `wandb login --relogin` to force relogin
+wandb: wandb version 0.12.18 is available!  To upgrade, please run:
+wandb:  $ pip install wandb --upgrade
+wandb: Tracking run with wandb version 0.12.16
+wandb: Run data is saved locally in /tmp/wandb/run-20220615_094838-3i5ed9q4
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run Dense_3_Hidden_128_64_32_Linear
+wandb: ⭐️ View project at https://wandb.ai/rshimogawa/nngauss
+wandb: 🚀 View run at https://wandb.ai/rshimogawa/nngauss/runs/3i5ed9q4
+[[36m2022-06-15 09:48:42,394[0m][[34msrc.training_pipeline[0m][[32mINFO[0m] - Instantiating trainer <pytorch_lightning.Trainer>[0m
+[[36m2022-06-15 09:48:42,422[0m][[34mpytorch_lightning.utilities.rank_zero[0m][[32mINFO[0m] - Trainer already configured with model summary callbacks: [<class 'pytorch_lightning.callbacks.rich_model_summary.RichModelSummary'>]. Skipping setting a default `ModelSummary` callback.[0m
+[[36m2022-06-15 09:48:42,423[0m][[34mpytorch_lightning.utilities.rank_zero[0m][[32mINFO[0m] - GPU available: True, used: True[0m
+[[36m2022-06-15 09:48:42,423[0m][[34mpytorch_lightning.utilities.rank_zero[0m][[32mINFO[0m] - TPU available: False, using: 0 TPU cores[0m
+[[36m2022-06-15 09:48:42,423[0m][[34mpytorch_lightning.utilities.rank_zero[0m][[32mINFO[0m] - IPU available: False, using: 0 IPUs[0m
+[[36m2022-06-15 09:48:42,423[0m][[34mpytorch_lightning.utilities.rank_zero[0m][[32mINFO[0m] - HPU available: False, using: 0 HPUs[0m
+[[36m2022-06-15 09:48:42,423[0m][[34msrc.training_pipeline[0m][[32mINFO[0m] - Logging hyperparameters![0m
+[[36m2022-06-15 09:48:42,426[0m][[34msrc.training_pipeline[0m][[32mINFO[0m] - Starting training![0m
+[[36m2022-06-15 09:48:44,525[0m][[34mpytorch_lightning.accelerators.gpu[0m][[32mINFO[0m] - LOCAL_RANK: 0 - CUDA_VISIBLE_DEVICES: [0,1][0m
+┏━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━┓
+┃    ┃ Name         ┃ Type                    ┃ Params ┃
+┡━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━┩
+│ 0  │ net          │ SimpleDenseNet_LL_gauss │ 23.8 K │
+│ 1  │ net.model    │ Sequential              │ 23.8 K │
+│ 2  │ net.model.0  │ Linear                  │ 12.9 K │
+│ 3  │ net.model.1  │ BatchNorm1d             │    256 │
+│ 4  │ net.model.2  │ Linear                  │  8.3 K │
+│ 5  │ net.model.3  │ BatchNorm1d             │    128 │
+│ 6  │ net.model.4  │ Linear                  │  2.1 K │
+│ 7  │ net.model.5  │ BatchNorm1d             │     64 │
+│ 8  │ net.model.6  │ Linear                  │     66 │
+│ 9  │ criterion    │ MSELoss                 │      0 │
+│ 10 │ train_acc    │ MeanSquaredError        │      0 │
+│ 11 │ val_acc      │ MeanSquaredError        │      0 │
+│ 12 │ test_acc     │ MeanSquaredError        │      0 │
+│ 13 │ val_acc_best │ MinMetric               │      0 │
+└────┴──────────────┴─────────────────────────┴────────┘
+Trainable params: 23.8 K                                                        
+Non-trainable params: 0                                                         
+Total params: 23.8 K                                                            
+Total estimated model params size (MB): 0                                       
+Epoch 99  ━━━━━━━━━━━━━━━━ 704/704 0:00:02 •        287.33it/s loss: 4.41 v_num:
+                                   0:00:00                     d9q4 val/acc:    
+                                                               4.251            
+                                                               val/acc_best:    
+                                                               4.201 train/acc: 
+                                                               4.514            
+[[36m2022-06-15 09:52:52,827[0m][[34msrc.training_pipeline[0m][[32mINFO[0m] - Starting testing![0m
+[[36m2022-06-15 09:52:52,829[0m][[34mpytorch_lightning.utilities.rank_zero[0m][[32mINFO[0m] - Restoring states from the checkpoint path at /home/ryuichi/machine_learning/nngauss/logs/experiments/multiruns/Dense_3_Hidden_128_64_32_Linear/2022-06-15_09-48-35/experiment=gauss_06/checkpoints/epoch_077.ckpt[0m
+[[36m2022-06-15 09:52:52,833[0m][[34mpytorch_lightning.accelerators.gpu[0m][[32mINFO[0m] - LOCAL_RANK: 0 - CUDA_VISIBLE_DEVICES: [0,1][0m
+[[36m2022-06-15 09:52:52,833[0m][[34mpytorch_lightning.utilities.rank_zero[0m][[32mINFO[0m] - Loaded model weights from checkpoint at /home/ryuichi/machine_learning/nngauss/logs/experiments/multiruns/Dense_3_Hidden_128_64_32_Linear/2022-06-15_09-48-35/experiment=gauss_06/checkpoints/epoch_077.ckpt[0m
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃        Test metric        ┃       DataLoader 0        ┃
+┡━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━┩
+│         test/acc          │    4.5567851066589355     │
+│         test/loss         │    4.5567851066589355     │
+└───────────────────────────┴───────────────────────────┘
+Testing ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 79/79 0:00:00 • 0:00:00 769.75it/s 
+[[36m2022-06-15 09:52:53,279[0m][[34msrc.training_pipeline[0m][[32mINFO[0m] - Finalizing![0m
+wandb: Waiting for W&B process to finish... (success).
+wandb: - 0.389 MB of 0.389 MB uploaded (0.000 MB deduped)wandb: \ 0.389 MB of 0.389 MB uploaded (0.000 MB deduped)wandb: | 0.389 MB of 0.405 MB uploaded (0.000 MB deduped)wandb: / 0.389 MB of 0.405 MB uploaded (0.000 MB deduped)wandb: - 0.389 MB of 0.405 MB uploaded (0.000 MB deduped)wandb: \ 0.389 MB of 0.405 MB uploaded (0.000 MB deduped)wandb: | 0.389 MB of 0.405 MB uploaded (0.000 MB deduped)wandb: / 0.402 MB of 0.405 MB uploaded (0.000 MB deduped)wandb: - 0.403 MB of 0.405 MB uploaded (0.000 MB deduped)wandb: \ 0.403 MB of 0.405 MB uploaded (0.000 MB deduped)wandb: | 0.403 MB of 0.405 MB uploaded (0.000 MB deduped)wandb: / 0.403 MB of 0.405 MB uploaded (0.000 MB deduped)wandb: - 0.403 MB of 0.405 MB uploaded (0.000 MB deduped)wandb: \ 0.403 MB of 0.405 MB uploaded (0.000 MB deduped)wandb: | 0.405 MB of 0.405 MB uploaded (0.000 MB deduped)wandb: / 0.405 MB of 0.405 MB uploaded (0.000 MB deduped)wandb: - 0.405 MB of 0.405 MB uploaded (0.000 MB deduped)wandb: \ 0.405 MB of 0.405 MB uploaded (0.000 MB deduped)wandb: | 0.405 MB of 0.405 MB uploaded (0.000 MB deduped)wandb: / 0.405 MB of 0.405 MB uploaded (0.000 MB deduped)wandb:                                                                                
+wandb: 
+wandb: Run history:
+wandb:               epoch ▁▁▁▁▂▂▂▂▂▃▃▃▃▃▃▄▄▄▄▄▅▅▅▅▅▅▆▆▆▆▆▇▇▇▇▇▇███
+wandb:            test/acc ▁
+wandb:           test/loss ▁
+wandb:           train/acc █▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+wandb:          train/loss █▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+wandb: trainer/global_step ▁▁▁▁▂▂▂▂▂▃▃▃▃▃▃▄▄▄▄▄▅▅▅▅▅▆▆▆▆▆▆▇▇▇▇▇████
+wandb:             val/acc ▃▂▂▁▂▃▁▅▄▁▂▃▂▇▃▁▁▂▂▁▂▃▁▂▄▃▂▃▂▂▄▂▃▂▅█▂▁▅▃
+wandb:        val/acc_best █▅▅▂▂▂▂▂▂▂▂▂▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+wandb:            val/loss ▃▂▂▁▂▃▁▅▄▁▂▃▂▇▃▁▁▂▂▁▂▃▁▂▄▃▂▃▂▂▄▂▃▂▅█▂▁▅▃
+wandb: 
+wandb: Run summary:
+wandb:               epoch 77
+wandb:            test/acc 4.55679
+wandb:           test/loss 4.55679
+wandb:           train/acc 4.51439
+wandb:          train/loss 4.51439
+wandb: trainer/global_step 62500
+wandb:             val/acc 4.25132
+wandb:        val/acc_best 4.20076
+wandb:            val/loss 4.25132
+wandb: 
+wandb: Synced Dense_3_Hidden_128_64_32_Linear: https://wandb.ai/rshimogawa/nngauss/runs/3i5ed9q4
+wandb: Synced 6 W&B file(s), 2 media file(s), 0 artifact file(s) and 0 other file(s)
+wandb: Find logs at: /tmp/wandb/run-20220615_094838-3i5ed9q4/logs
+<pytorch_lightning.loggers.wandb.WandbLogger object at 0x7f4fead456a0>
+True
+[[36m2022-06-15 09:52:57,918[0m][[34msrc.training_pipeline[0m][[32mINFO[0m] - Best model ckpt at /home/ryuichi/machine_learning/nngauss/logs/experiments/multiruns/Dense_3_Hidden_128_64_32_Linear/2022-06-15_09-48-35/experiment=gauss_06/checkpoints/epoch_077.ckpt[0m
+/home/ryuichi/machine_learning/nngauss/train.py:10: UserWarning: 
+The version_base parameter is not specified.
+Please specify a compatability version level, or None.
+Will assume defaults for version 1.1
+  @hydra.main(config_path="configs/", config_name="train.yaml")
+[[36m2022-06-15 09:52:59,898[0m][[35mHYDRA[0m] Launching 1 jobs locally[0m
+[[36m2022-06-15 09:52:59,898[0m][[35mHYDRA[0m] 	#0 : experiment=gauss_07[0m
+/home/ryuichi/mambaforge/envs/lhtrain/lib/python3.9/site-packages/hydra/_internal/core_plugins/basic_launcher.py:74: UserWarning: Future Hydra versions will no longer change working directory at job runtime by default.
+See https://hydra.cc/docs/next/upgrades/1.1_to_1.2/changes_to_job_working_dir/ for more information.
+  ret = run_job(
+[[36m2022-06-15 09:53:01,366[0m][[34msrc.utils[0m][[32mINFO[0m] - Disabling python warnings! <config.ignore_warnings=True>[0m
+[[36m2022-06-15 09:53:01,366[0m][[34msrc.utils[0m][[32mINFO[0m] - Printing config tree with Rich! <config.print_config=True>[0m
+CONFIG
+├── datamodule
+│   └── _target_: src.datamodules.gauss_datamodule.gaussDataModule              
+│       data_dir: /home/ryuichi/machine_learning/nngauss/data/                  
+│       batch_size: 64                                                          
+│       train_val_test_split:                                                   
+│       - 40000                                                                 
+│       - 5000                                                                  
+│       - 5000                                                                  
+│       num_workers: 0                                                          
+│       pin_memory: false                                                       
+│                                                                               
+├── model
+│   └── _target_: src.models.gauss_module.gaussLitModule                        
+│       lr: 0.001                                                               
+│       weight_decay: 0.0005                                                    
+│       net:                                                                    
+│         _target_: src.models.components.gauss_net.SimpleDenseNet_CNN_gauss    
+│         input_size: 100                                                       
+│         lin1_size: 64                                                         
+│         lin2_size: 32                                                         
+│         lin3_size: 16                                                         
+│         output_size: 2                                                        
+│                                                                               
+├── callbacks
+│   └── model_checkpoint:                                                       
+│         _target_: pytorch_lightning.callbacks.ModelCheckpoint                 
+│         monitor: val/acc                                                      
+│         mode: max                                                             
+│         save_top_k: 1                                                         
+│         save_last: true                                                       
+│         verbose: false                                                        
+│         dirpath: checkpoints/                                                 
+│         filename: epoch_{epoch:03d}                                           
+│         auto_insert_metric_name: false                                        
+│       early_stopping:                                                         
+│         _target_: pytorch_lightning.callbacks.EarlyStopping                   
+│         monitor: val/acc                                                      
+│         mode: max                                                             
+│         patience: 100                                                         
+│         min_delta: 0                                                          
+│       model_summary:                                                          
+│         _target_: pytorch_lightning.callbacks.RichModelSummary                
+│         max_depth: -1                                                         
+│       rich_progress_bar:                                                      
+│         _target_: pytorch_lightning.callbacks.RichProgressBar                 
+│                                                                               
+├── logger
+│   └── wandb:                                                                  
+│         _target_: pytorch_lightning.loggers.wandb.WandbLogger                 
+│         project: nngauss                                                      
+│         name: CNN                                                             
+│         save_dir: /tmp                                                        
+│         offline: false                                                        
+│         id: null                                                              
+│         log_model: false                                                      
+│         prefix: ''                                                            
+│         job_type: train                                                       
+│         group: ''                                                             
+│         tags:                                                                 
+│         - gauss                                                               
+│         - CNN                                                                 
+│                                                                               
+├── trainer
+│   └── _target_: pytorch_lightning.Trainer                                     
+│       gpus: 1                                                                 
+│       min_epochs: 1                                                           
+│       max_epochs: 100                                                         
+│       resume_from_checkpoint: null                                            
+│       gradient_clip_val: 0.5                                                  
+│                                                                               
+├── original_work_dir
+│   └── /home/ryuichi/machine_learning/nngauss                                  
+├── data_dir
+│   └── /home/ryuichi/machine_learning/nngauss/data/                            
+├── print_config
+│   └── True                                                                    
+├── ignore_warnings
+│   └── True                                                                    
+├── train
+│   └── True                                                                    
+├── test
+│   └── True                                                                    
+├── seed
+│   └── 0                                                                       
+└── name
+    └── CNN                                                                     
+[[36m2022-06-15 09:53:01,395[0m][[34msrc.training_pipeline[0m][[32mINFO[0m] - Instantiating datamodule <src.datamodules.gauss_datamodule.gaussDataModule>[0m
+[[36m2022-06-15 09:53:01,397[0m][[34msrc.training_pipeline[0m][[32mINFO[0m] - Instantiating model <src.models.gauss_module.gaussLitModule>[0m
+Error executing job with overrides: ['experiment=gauss_07']
+Error locating target 'src.models.components.gauss_net.SimpleDenseNet_CNN_gauss', see chained exception above.
+full_key: model.net
+
+Set the environment variable HYDRA_FULL_ERROR=1 for a complete stack trace.
+/home/ryuichi/machine_learning/nngauss/train.py:10: UserWarning: 
+The version_base parameter is not specified.
+Please specify a compatability version level, or None.
+Will assume defaults for version 1.1
+  @hydra.main(config_path="configs/", config_name="train.yaml")
+[[36m2022-06-15 10:29:00,296[0m][[35mHYDRA[0m] Launching 0 jobs locally[0m
+/home/ryuichi/machine_learning/nngauss/train.py:10: UserWarning: 
+The version_base parameter is not specified.
+Please specify a compatability version level, or None.
+Will assume defaults for version 1.1
+  @hydra.main(config_path="configs/", config_name="train.yaml")
+[[36m2022-06-15 11:37:16,705[0m][[35mHYDRA[0m] Launching 1 jobs locally[0m
+[[36m2022-06-15 11:37:16,705[0m][[35mHYDRA[0m] 	#0 : experiment=gauss_11_LR_MAE[0m
+/home/ryuichi/mambaforge/envs/lhtrain/lib/python3.9/site-packages/hydra/_internal/core_plugins/basic_launcher.py:74: UserWarning: Future Hydra versions will no longer change working directory at job runtime by default.
+See https://hydra.cc/docs/next/upgrades/1.1_to_1.2/changes_to_job_working_dir/ for more information.
+  ret = run_job(
+[[36m2022-06-15 11:37:17,789[0m][[34msrc.utils[0m][[32mINFO[0m] - Disabling python warnings! <config.ignore_warnings=True>[0m
+[[36m2022-06-15 11:37:17,790[0m][[34msrc.utils[0m][[32mINFO[0m] - Printing config tree with Rich! <config.print_config=True>[0m
+CONFIG
+├── datamodule
+│   └── _target_: src.datamodules.gauss_datamodule.gaussDataModule              
+│       data_dir: /home/ryuichi/machine_learning/nngauss/data/                  
+│       batch_size: 64                                                          
+│       train_val_test_split:                                                   
+│       - 40000                                                                 
+│       - 5000                                                                  
+│       - 5000                                                                  
+│       num_workers: 0                                                          
+│       pin_memory: false                                                       
+│                                                                               
+├── model
+│   └── _target_: src.models.gauss_module_mae.gaussLitModule                    
+│       lr: 0.001                                                               
+│       weight_decay: 0.0005                                                    
+│       net:                                                                    
+│         _target_: src.models.components.gauss_net.CNN2_gauss                  
+│         input_size: 100                                                       
+│         lin1_size: 128                                                        
+│         lin2_size: 64                                                         
+│         lin3_size: 32                                                         
+│         output_size: 2                                                        
+│                                                                               
+├── callbacks
+│   └── model_checkpoint:                                                       
+│         _target_: pytorch_lightning.callbacks.ModelCheckpoint                 
+│         monitor: val/acc                                                      
+│         mode: max                                                             
+│         save_top_k: 1                                                         
+│         save_last: true                                                       
+│         verbose: false                                                        
+│         dirpath: checkpoints/                                                 
+│         filename: epoch_{epoch:03d}                                           
+│         auto_insert_metric_name: false                                        
+│       early_stopping:                                                         
+│         _target_: pytorch_lightning.callbacks.EarlyStopping                   
+│         monitor: val/acc                                                      
+│         mode: max                                                             
+│         patience: 100                                                         
+│         min_delta: 0                                                          
+│       model_summary:                                                          
+│         _target_: pytorch_lightning.callbacks.RichModelSummary                
+│         max_depth: -1                                                         
+│       rich_progress_bar:                                                      
+│         _target_: pytorch_lightning.callbacks.RichProgressBar                 
+│                                                                               
+├── logger
+│   └── wandb:                                                                  
+│         _target_: pytorch_lightning.loggers.wandb.WandbLogger                 
+│         project: nngauss                                                      
+│         name: Dense_3_Hidden_128_64_32_32_32_LeakyReLU_MAE                    
+│         save_dir: /tmp                                                        
+│         offline: false                                                        
+│         id: null                                                              
+│         log_model: false                                                      
+│         prefix: ''                                                            
+│         job_type: train                                                       
+│         group: ''                                                             
+│         tags:                                                                 
+│         - gauss                                                               
+│         - Dense_3_Hidden_128_64_32_32_32_LeakyReLU_MAE                        
+│                                                                               
+├── trainer
+│   └── _target_: pytorch_lightning.Trainer                                     
+│       gpus: 1                                                                 
+│       min_epochs: 1                                                           
+│       max_epochs: 1000                                                        
+│       resume_from_checkpoint: null                                            
+│       gradient_clip_val: 0.5                                                  
+│                                                                               
+├── original_work_dir
+│   └── /home/ryuichi/machine_learning/nngauss                                  
+├── data_dir
+│   └── /home/ryuichi/machine_learning/nngauss/data/                            
+├── print_config
+│   └── True                                                                    
+├── ignore_warnings
+│   └── True                                                                    
+├── train
+│   └── True                                                                    
+├── test
+│   └── True                                                                    
+├── seed
+│   └── 0                                                                       
+└── name
+    └── Dense_3_Hidden_128_64_32_32_32_LeakyReLU_MAE                            
+[[36m2022-06-15 11:37:17,819[0m][[34msrc.training_pipeline[0m][[32mINFO[0m] - Instantiating datamodule <src.datamodules.gauss_datamodule.gaussDataModule>[0m
+[[36m2022-06-15 11:37:17,822[0m][[34msrc.training_pipeline[0m][[32mINFO[0m] - Instantiating model <src.models.gauss_module_mae.gaussLitModule>[0m
+[[36m2022-06-15 11:37:18,048[0m][[34mtorch.distributed.nn.jit.instantiator[0m][[32mINFO[0m] - Created a temporary directory at /tmp/tmp0rfgyj6v[0m
+[[36m2022-06-15 11:37:18,048[0m][[34mtorch.distributed.nn.jit.instantiator[0m][[32mINFO[0m] - Writing /tmp/tmp0rfgyj6v/_remote_module_non_sriptable.py[0m
+[[36m2022-06-15 11:37:18,055[0m][[34msrc.training_pipeline[0m][[32mINFO[0m] - Instantiating callback <pytorch_lightning.callbacks.ModelCheckpoint>[0m
+[[36m2022-06-15 11:37:18,056[0m][[34msrc.training_pipeline[0m][[32mINFO[0m] - Instantiating callback <pytorch_lightning.callbacks.EarlyStopping>[0m
+[[36m2022-06-15 11:37:18,057[0m][[34msrc.training_pipeline[0m][[32mINFO[0m] - Instantiating callback <pytorch_lightning.callbacks.RichModelSummary>[0m
+[[36m2022-06-15 11:37:18,057[0m][[34msrc.training_pipeline[0m][[32mINFO[0m] - Instantiating callback <pytorch_lightning.callbacks.RichProgressBar>[0m
+[[36m2022-06-15 11:37:18,058[0m][[34msrc.training_pipeline[0m][[32mINFO[0m] - Instantiating logger <pytorch_lightning.loggers.wandb.WandbLogger>[0m
+wandb: Currently logged in as: rshimogawa. Use `wandb login --relogin` to force relogin
+wandb: wandb version 0.12.18 is available!  To upgrade, please run:
+wandb:  $ pip install wandb --upgrade
+wandb: Tracking run with wandb version 0.12.16
+wandb: Run data is saved locally in /tmp/wandb/run-20220615_113718-2yrhbtdg
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run Dense_3_Hidden_128_64_32_32_32_LeakyReLU_MAE
+wandb: ⭐️ View project at https://wandb.ai/rshimogawa/nngauss
+wandb: 🚀 View run at https://wandb.ai/rshimogawa/nngauss/runs/2yrhbtdg
+[[36m2022-06-15 11:37:22,792[0m][[34msrc.training_pipeline[0m][[32mINFO[0m] - Instantiating trainer <pytorch_lightning.Trainer>[0m
+[[36m2022-06-15 11:37:22,819[0m][[34mpytorch_lightning.utilities.rank_zero[0m][[32mINFO[0m] - Trainer already configured with model summary callbacks: [<class 'pytorch_lightning.callbacks.rich_model_summary.RichModelSummary'>]. Skipping setting a default `ModelSummary` callback.[0m
+[[36m2022-06-15 11:37:22,819[0m][[34mpytorch_lightning.utilities.rank_zero[0m][[32mINFO[0m] - GPU available: True, used: True[0m
+[[36m2022-06-15 11:37:22,819[0m][[34mpytorch_lightning.utilities.rank_zero[0m][[32mINFO[0m] - TPU available: False, using: 0 TPU cores[0m
+[[36m2022-06-15 11:37:22,819[0m][[34mpytorch_lightning.utilities.rank_zero[0m][[32mINFO[0m] - IPU available: False, using: 0 IPUs[0m
+[[36m2022-06-15 11:37:22,819[0m][[34mpytorch_lightning.utilities.rank_zero[0m][[32mINFO[0m] - HPU available: False, using: 0 HPUs[0m
+[[36m2022-06-15 11:37:22,819[0m][[34msrc.training_pipeline[0m][[32mINFO[0m] - Logging hyperparameters![0m
+[[36m2022-06-15 11:37:22,822[0m][[34msrc.training_pipeline[0m][[32mINFO[0m] - Starting training![0m
+[[36m2022-06-15 11:37:24,901[0m][[34mpytorch_lightning.accelerators.gpu[0m][[32mINFO[0m] - LOCAL_RANK: 0 - CUDA_VISIBLE_DEVICES: [0,1][0m
+┏━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━┳━━━━━━━━┓
+┃    ┃ Name         ┃ Type              ┃ Params ┃
+┡━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━╇━━━━━━━━┩
+│ 0  │ net          │ CNN2_gauss        │ 26.0 K │
+│ 1  │ net.model    │ Sequential        │ 26.0 K │
+│ 2  │ net.model.0  │ Unflatten         │      0 │
+│ 3  │ net.model.1  │ Conv1d            │      8 │
+│ 4  │ net.model.2  │ Flatten           │      0 │
+│ 5  │ net.model.3  │ Linear            │ 12.9 K │
+│ 6  │ net.model.4  │ BatchNorm1d       │    256 │
+│ 7  │ net.model.5  │ LeakyReLU         │      0 │
+│ 8  │ net.model.6  │ Linear            │  8.3 K │
+│ 9  │ net.model.7  │ BatchNorm1d       │    128 │
+│ 10 │ net.model.8  │ LeakyReLU         │      0 │
+│ 11 │ net.model.9  │ Linear            │  2.1 K │
+│ 12 │ net.model.10 │ BatchNorm1d       │     64 │
+│ 13 │ net.model.11 │ LeakyReLU         │      0 │
+│ 14 │ net.model.12 │ Linear            │  1.1 K │
+│ 15 │ net.model.13 │ BatchNorm1d       │     64 │
+│ 16 │ net.model.14 │ LeakyReLU         │      0 │
+│ 17 │ net.model.15 │ Linear            │  1.1 K │
+│ 18 │ net.model.16 │ BatchNorm1d       │     64 │
+│ 19 │ net.model.17 │ LeakyReLU         │      0 │
+│ 20 │ net.model.18 │ Linear            │     66 │
+│ 21 │ criterion    │ L1Loss            │      0 │
+│ 22 │ train_acc    │ MeanAbsoluteError │      0 │
+│ 23 │ val_acc      │ MeanAbsoluteError │      0 │
+│ 24 │ test_acc     │ MeanAbsoluteError │      0 │
+│ 25 │ val_acc_best │ MinMetric         │      0 │
+└────┴──────────────┴───────────────────┴────────┘
+Trainable params: 26.0 K                                                        
+Non-trainable params: 0                                                         
+Total params: 26.0 K                                                            
+Total estimated model params size (MB): 0                                       
+Epoch 149 ━━━━━━━━━━━━━━━━ 704/704 0:00:03 •        216.90it/s loss: 0.303      
+                                   0:00:00                     v_num: btdg      
+                                                               val/acc: 0.181   
+                                                               val/acc_best:    
+                                                               0.151 train/acc: 
+                                                               0.274            
+[[36m2022-06-15 11:45:33,787[0m][[34msrc.training_pipeline[0m][[32mINFO[0m] - Starting testing![0m
+[[36m2022-06-15 11:45:33,790[0m][[34mpytorch_lightning.utilities.rank_zero[0m][[32mINFO[0m] - Restoring states from the checkpoint path at /home/ryuichi/machine_learning/nngauss/logs/experiments/multiruns/Dense_3_Hidden_128_64_32_32_32_LeakyReLU_MAE/2022-06-15_11-37-16/experiment=gauss_11_LR_MAE/checkpoints/epoch_049.ckpt[0m
+[[36m2022-06-15 11:45:33,796[0m][[34mpytorch_lightning.accelerators.gpu[0m][[32mINFO[0m] - LOCAL_RANK: 0 - CUDA_VISIBLE_DEVICES: [0,1][0m
+[[36m2022-06-15 11:45:33,796[0m][[34mpytorch_lightning.utilities.rank_zero[0m][[32mINFO[0m] - Loaded model weights from checkpoint at /home/ryuichi/machine_learning/nngauss/logs/experiments/multiruns/Dense_3_Hidden_128_64_32_32_32_LeakyReLU_MAE/2022-06-15_11-37-16/experiment=gauss_11_LR_MAE/checkpoints/epoch_049.ckpt[0m
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃        Test metric        ┃       DataLoader 0        ┃
+┡━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━┩
+│         test/acc          │      0.3792724609375      │
+│         test/loss         │      0.3792724609375      │
+└───────────────────────────┴───────────────────────────┘
+Testing ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 79/79 0:00:00 • 0:00:00 674.28it/s 
+[[36m2022-06-15 11:45:34,206[0m][[34msrc.training_pipeline[0m][[32mINFO[0m] - Finalizing![0m
+wandb: Waiting for W&B process to finish... (success).
+wandb: - 0.362 MB of 0.389 MB uploaded (0.000 MB deduped)wandb: \ 0.389 MB of 0.389 MB uploaded (0.000 MB deduped)wandb: | 0.389 MB of 0.407 MB uploaded (0.000 MB deduped)wandb: / 0.389 MB of 0.407 MB uploaded (0.000 MB deduped)wandb: - 0.389 MB of 0.407 MB uploaded (0.000 MB deduped)wandb: \ 0.389 MB of 0.407 MB uploaded (0.000 MB deduped)wandb: | 0.389 MB of 0.407 MB uploaded (0.000 MB deduped)wandb: / 0.407 MB of 0.407 MB uploaded (0.000 MB deduped)wandb: - 0.407 MB of 0.407 MB uploaded (0.000 MB deduped)wandb: \ 0.407 MB of 0.407 MB uploaded (0.000 MB deduped)wandb: | 0.407 MB of 0.407 MB uploaded (0.000 MB deduped)wandb: / 0.407 MB of 0.407 MB uploaded (0.000 MB deduped)wandb: - 0.407 MB of 0.407 MB uploaded (0.000 MB deduped)wandb: \ 0.407 MB of 0.407 MB uploaded (0.000 MB deduped)wandb: | 0.407 MB of 0.407 MB uploaded (0.000 MB deduped)wandb: / 0.407 MB of 0.407 MB uploaded (0.000 MB deduped)wandb:                                                                                
+wandb: 
+wandb: Run history:
+wandb:               epoch ▁▁▁▁▂▂▂▂▂▃▃▃▃▃▃▄▄▄▄▄▅▅▅▅▅▅▆▆▆▆▆▆▇▇▇▇▇███
+wandb:            test/acc ▁
+wandb:           test/loss ▁
+wandb:           train/acc █▆▅▃▃▃▂▂▂▂▂▂▂▁▂▁▂▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+wandb:          train/loss █▆▅▃▃▃▂▂▂▂▂▂▂▁▂▁▂▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+wandb: trainer/global_step ▁▁▁▁▂▂▂▂▂▃▃▃▃▃▃▄▄▄▄▄▅▅▅▅▅▅▆▆▆▆▆▆▇▇▇▇▇███
+wandb:             val/acc ▅▅▄▅▄▂▂▅▃▇▃▄▃█▅▃▅▂▂▃▂▄▄▄▃▄▅▁▂▆▂▄▅▃▇▁▃▆▃▂
+wandb:        val/acc_best ██▅▄▄▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▁▁▁▁▁▁▁▁▁▁▁▁▁
+wandb:            val/loss ▅▅▄▅▄▂▂▅▃▇▃▄▃█▅▃▅▂▂▃▂▄▄▄▃▄▅▁▂▆▂▄▅▃▇▁▃▆▃▂
+wandb: 
+wandb: Run summary:
+wandb:               epoch 49
+wandb:            test/acc 0.37927
+wandb:           test/loss 0.37927
+wandb:           train/acc 0.27363
+wandb:          train/loss 0.27363
+wandb: trainer/global_step 93750
+wandb:             val/acc 0.18145
+wandb:        val/acc_best 0.15089
+wandb:            val/loss 0.18145
+wandb: 
+wandb: Synced Dense_3_Hidden_128_64_32_32_32_LeakyReLU_MAE: https://wandb.ai/rshimogawa/nngauss/runs/2yrhbtdg
+wandb: Synced 6 W&B file(s), 2 media file(s), 0 artifact file(s) and 0 other file(s)
+wandb: Find logs at: /tmp/wandb/run-20220615_113718-2yrhbtdg/logs
+<pytorch_lightning.loggers.wandb.WandbLogger object at 0x7f45a1847550>
+True
+[[36m2022-06-15 11:45:38,300[0m][[34msrc.training_pipeline[0m][[32mINFO[0m] - Best model ckpt at /home/ryuichi/machine_learning/nngauss/logs/experiments/multiruns/Dense_3_Hidden_128_64_32_32_32_LeakyReLU_MAE/2022-06-15_11-37-16/experiment=gauss_11_LR_MAE/checkpoints/epoch_049.ckpt[0m
