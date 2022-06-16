@@ -1,3 +1,19 @@
+# Preliminary Project
+This is a training project for myself to understand NN and basic codings. It uses [Lightning-Hydra-Template](https://github.com/ashleve/lightning-hydra-template).
+
+The dataset are first generated from datageneration.ipynb. Then training will be started with following command.
+
+```
+python tain.py
+```
+
+Some predefined experiments are in ./config/experiment folder and they can be executed by following command.
+```
+python train.py -m 'experiment=gauss01'
+```
+
+For the manual for Lightning-Hydra-Template, please read the following sections.
+
 <div align="center">
 
 # Lightning-Hydra-Template

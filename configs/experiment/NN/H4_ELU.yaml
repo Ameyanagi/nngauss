@@ -1,0 +1,41 @@
+# @package _global_
+
+# to execute this experiment run:
+# python train.py experiment=example
+
+defaults:
+  - override /datamodule: gauss.yaml
+  - override /model: gauss.yaml
+  - override /callbacks: default.yaml
+  - override /logger: wandb.yaml
+  - override /trainer: default.yaml
+
+# all parameters below will be merged with parameters from default configurations set above
+# this allows you to overwrite only specified parameters
+
+# name of the run determines folder name in logs
+name: "H4_ELU_128_64_32"
+
+seed: 0
+
+trainer:
+  min_epochs: 1
+  max_epochs: 100
+  gradient_clip_val: 0.5
+
+model:
+  lr: 0.001
+  net:
+    _target_: src.models.components.NN_net.H4_ELU
+    input_size: 100
+    lin1_size: 128
+    lin2_size: 64
+    lin3_size: 32
+
+datamodule:
+  batch_size: 64
+
+logger:
+  wandb:
+    tags: ["gauss", "${name}"]
+    project: "nngauss_NN"

@@ -1,6 +1,9 @@
 _target_: src.models.gauss_module.gaussLitModule
 lr: 0.001
 weight_decay: 0.0005
+data_dir: ${data_dir}
+name: ${name}
+
 
 net:
   _target_: src.models.components.gauss_net.SimpleDenseNet_LR2_gauss

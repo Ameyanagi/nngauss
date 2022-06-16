@@ -28,6 +28,8 @@ class gaussLitModule(LightningModule):
         net: torch.nn.Module,
         lr: float = 0.001,
         weight_decay: float = 0.0005,
+        data_dir: str = "./",
+        name: str = "default"
     ):
         super().__init__()
 
@@ -36,6 +38,8 @@ class gaussLitModule(LightningModule):
         self.save_hyperparameters(logger=False)
 
         self.net = net
+        self.data_dir = data_dir
+        self.name = name
 
         # loss function
         self.criterion = torch.nn.MSELoss()
@@ -121,18 +125,25 @@ class gaussLitModule(LightningModule):
         fig_a, ax_a = plt.subplots()
         ax_a.scatter(targets[:,0], preds[:,0])
         ax_a.set_ylabel("Predicted a")
-        ax_a.set_ylabel("True a")
+        ax_a.set_xlabel("True a")
+        ax_a.set_title(self.name + " a")
         
         fig_b, ax_b = plt.subplots()
         ax_b.scatter(targets[:,1], preds[:,1])
         ax_b.set_ylabel("Predicted b")
-        ax_b.set_ylabel("True b")
+        ax_b.set_xlabel("True b")
+        ax_b.set_title(self.name + " b")
+        
+        fig_a.savefig(self.data_dir + "/fig/" + self.name + "_a.png")
+        fig_b.savefig(self.data_dir + "/fig/" + self.name + "_b.png")
+        
         
         # fig_c, ax_c = plt.subplots()
         # ax_c.scatter(targets[:,2], preds[:,2])
         # ax_c.set_ylabel("Predicted c")
         # ax_c.set_ylabel("True c")
         
+                
         wandb.log({"Parity plot: a": fig_a,
                    "Parity plot: b": fig_b,
                 #    "Parity plot: c": fig_c,

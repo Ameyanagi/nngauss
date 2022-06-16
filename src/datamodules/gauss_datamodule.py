@@ -79,6 +79,10 @@ class gaussDataModule(LightningDataModule):
                 lengths=self.hparams.train_val_test_split,
                 generator=torch.Generator().manual_seed(42),
             )
+        
+        torch.save(self.data_train, self.hparams.data_dir + "/gauss/gauss_train.pt")
+        torch.save(self.data_val, self.hparams.data_dir + "/gauss/gauss_val.pt")
+        torch.save(self.data_test, self.hparams.data_dir + "/gauss/gauss_test.pt")
 
     def train_dataloader(self):
         return DataLoader(
